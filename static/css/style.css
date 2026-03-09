@@ -257,6 +257,7 @@ tr:hover td { background: var(--surface2); }
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     min-height: auto;
 }
 
@@ -264,10 +265,10 @@ tr:hover td { background: var(--surface2); }
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 100%;
+    width: 100%;
+    max-width: 360px;
     margin: 0 auto;
     position: relative;
-    width: 360px;
     height: 220px;
     perspective: 1200px;
     transform-style: preserve-3d;
@@ -343,9 +344,15 @@ tr:hover td { background: var(--surface2); }
 }
 
 @media (max-width: 480px) {
-    .home-circles-wrap { padding: 0.75rem 1rem; }
+    .home-circles-wrap {
+        padding: 0.75rem 1rem;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
     .home-circles {
-        width: 260px;
+        width: 100%;
+        max-width: 260px;
         height: 180px;
         perspective: 900px;
         margin: 0 auto;
