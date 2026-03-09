@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}لوحة المشرف - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('index') }}">الرئيسية</a>
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('admin_subjects') }}">المواد</a>
+<a href="{{ url_for('admin_results') }}">النتائج</a>
+<a href="{{ url_for('admin_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>لوحة المشرف</h2>
+    <p class="text-muted">مرحباً {{ user.username }}</p>
+    <div class="quick-actions">
+        <a href="{{ url_for('admin_question_add') }}" class="btn btn-primary btn-easy">إضافة سؤال</a>
+        <a href="{{ url_for('admin_results') }}" class="btn btn-secondary btn-easy">نتائج الطلاب</a>
+    </div>
+    <div class="stats-grid stats-grid-easy">
+        <div class="stat-card">
+            <div class="value">{{ subjects|length }}</div>
+            <div class="label">المواد</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{{ students_count }}</div>
+            <div class="label">الطلاب</div>
+        </div>
+    </div>
+    <h3>الأسئلة حسب المادة والصف</h3>
+    <p class="text-muted">اختر الصف والمادة ثم اضغط «إدارة الأسئلة»</p>
+    <div class="dashboard-dropdowns">
+        <div class="form-group form-group-easy">
+            <label for="dashboard_grade">الصف</label>
+            <select id="dashboard_grade" class="input-easy">
+                <option value="">اختر الصف</option>
+                {% for value, label in grades %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="dashboard_subject">المادة</label>
+            <select id="dashboard_subject" class="input-easy">
+                <option value="">اختر المادة</option>
+                {% for name in default_subjects %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="button" id="dashboard_go_questions" class="btn btn-primary btn-easy" disabled>إدارة الأسئلة</button>
+    </div>
+    <script>
+    (function() {
+        var subjectIds = {
+            {% for s in subjects %}
+            "{{ s.grade }}_{{ s.name }}": {{ s.id }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+        };
+        var gradeSelect = document.getElementById('dashboard_grade');
+        var subjectSelect = document.getElementById('dashboard_subject');
+        var btn = document.getElementById('dashboard_go_questions');
+        function check() {
+            var g = gradeSelect && gradeSelect.value;
+            var m = subjectSelect && subjectSelect.value;
+            var key = g && m ? g + '_' + m : null;
+            var id = key ? subjectIds[key] : null;
+            if (btn) btn.disabled = !id;
+            return id;
+        }
+        function go() {
+            var id = check();
+            if (id) window.location = "{{ url_for('admin_questions', subject_id=0) }}".replace('0', id);
+        }
+        if (gradeSelect) gradeSelect.addEventListener('change', check);
+        if (subjectSelect) subjectSelect.addEventListener('change', check);
+        if (btn) btn.addEventListener('click', go);
+        check();
+    })();
+    </script>
+</div>
+{% endblock %}

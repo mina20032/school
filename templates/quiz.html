@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}اختبار: {{ subject.name }}{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('student_subjects') }}">المواد</a>
+<a href="{{ url_for('student_dashboard') }}">لوحتي</a>
+<a href="{{ url_for('marathon') }}">الترتيب</a>
+<a href="{{ url_for('student_logout') }}">خروج</a>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="card quiz-card">
+    <h2>{{ subject.name }}</h2>
+    <p class="text-muted quiz-hint">اختر إجابة لكل سؤال. لا تحدّث الصفحة.</p>
+    <div id="quiz-timer" class="quiz-timer">
+        <span id="quiz-time-left" data-seconds="{{ quiz_minutes * 60 }}">الوقت المتبقي: --:--</span>
+    </div>
+    <form id="quiz-form" action="{{ url_for('quiz_submit') }}" method="post">
+        <input type="hidden" id="quiz-session-id" name="quiz_session_id" value="{{ quiz_session_id }}">
+        <div id="quiz-questions-container">
+            {% for q in questions %}
+            <div class="question-block question-block-easy" data-question-id="{{ q.id }}">
+                <h3 class="question-text">{{ loop.index }}. {{ q.question_text }}</h3>
+                <div class="options options-easy">
+                    <label class="option-label"><input type="radio" name="q_{{ q.id }}" value="A" required><span class="option-letter">(أ)</span> {{ q.option_a }}</label>
+                    <label class="option-label"><input type="radio" name="q_{{ q.id }}" value="B"><span class="option-letter">(ب)</span> {{ q.option_b }}</label>
+                    <label class="option-label"><input type="radio" name="q_{{ q.id }}" value="C"><span class="option-letter">(ج)</span> {{ q.option_c }}</label>
+                    <label class="option-label"><input type="radio" name="q_{{ q.id }}" value="D"><span class="option-letter">(د)</span> {{ q.option_d }}</label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary btn-easy btn-big">تسليم الاختبار</button>
+    </form>
+</div>
+{% endblock %}

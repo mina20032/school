@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}لوحتي - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('index') }}">الرئيسية</a>
+<a href="{{ url_for('student_subjects') }}">المواد</a>
+<a href="{{ url_for('marathon') }}">الترتيب</a>
+<a href="{{ url_for('student_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card card-main-action">
+    <a href="{{ url_for('student_subjects') }}" class="btn btn-primary btn-block btn-easy btn-big">حل اختبار</a>
+    <p class="text-muted text-center mt-1">اختر مادة وابدأ</p>
+</div>
+<div class="card">
+    <h3>إحصائياتك</h3>
+    <div class="stats-grid stats-grid-easy">
+        <div class="stat-card">
+            <div class="value">{{ student.name }}</div>
+            <div class="label">اسمك</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{% for g in grades %}{% if g[0] == student.grade %}{{ g[1] }}{% endif %}{% endfor %}</div>
+            <div class="label">الصف</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{{ student.total_points }}</div>
+            <div class="label">مجموع النقاط</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{{ total_correct }}</div>
+            <div class="label">إجابات صحيحة</div>
+        </div>
+    </div>
+    <a href="{{ url_for('marathon') }}" class="btn btn-secondary">ترتيبك هنا </a>
+</div>
+<div class="card">
+    <h3>المواد اللي حليتها</h3>
+    {% if subjects_solved %}
+    <ul class="subjects-solved-list">
+        {% for sub in subjects_solved %}
+        <li>{{ sub }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-muted">لسه ما حليتش أي اختبار. <a href="{{ url_for('student_subjects') }}">ابدأ من هنا</a>.</p>
+    {% endif %}
+</div>
+<div class="card">
+    <h3>سجل الاختبارات</h3>
+    {% if history %}
+    <table>
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>المادة</th>
+                <th>الصحيح</th>
+                <th>النقاط</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in history %}
+            <tr>
+                <td>{{ h.date.strftime('%Y-%m-%d %H:%M') if h.date else '—' }}</td>
+                <td>{{ h.subject }}</td>
+                <td>{{ h.correct }} / {{ h.total }}</td>
+                <td>{{ h.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">لا يوجد سجل بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}

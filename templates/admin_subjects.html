@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}المواد - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('admin_subjects') }}">المواد</a>
+<a href="{{ url_for('admin_results') }}">النتائج</a>
+<a href="{{ url_for('admin_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h3>كل المواد</h3>
+    {% if subjects %}
+    <table class="table-easy">
+        <thead>
+            <tr>
+                <th>المادة</th>
+                <th>الصف</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in subjects %}
+            <tr>
+                <td>{{ s.name }}</td>
+                <td>{% for g in grades %}{% if g[0] == s.grade %}{{ g[1] }}{% endif %}{% endfor %}</td>
+                <td class="flex">
+                    <a href="{{ url_for('admin_questions', subject_id=s.id) }}" class="btn btn-sm btn-primary">الأسئلة</a>
+                    <form method="post" action="{{ url_for('admin_subject_delete', subject_id=s.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" data-confirm="حذف هذه المادة؟">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">لا توجد مواد.</p>
+    {% endif %}
+</div>
+{% endblock %}

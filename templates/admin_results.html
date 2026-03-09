@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}نتائج الطلاب - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('admin_subjects') }}">المواد</a>
+<a href="{{ url_for('admin_results') }}">النتائج</a>
+<a href="{{ url_for('admin_logout') }}">تسجيل الخروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>نتائج الطلاب ومحاولات الاختبارات</h2>
+    <p class="text-muted">آخر 500 إجابة.</p>
+    {% if answers %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الطالب</th>
+                    <th>المادة</th>
+                    <th>صحيح؟</th>
+                    <th>النقاط</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in answers %}
+                <tr>
+                    <td>{{ a.submitted_at.strftime('%Y-%m-%d %H:%M') if a.submitted_at else '—' }}</td>
+                    <td>{{ a.student.name if a.student else '—' }}</td>
+                    <td>{{ a.question.subject.name if a.question and a.question.subject else '—' }}</td>
+                    <td>{{ 'نعم' if a.is_correct else 'لا' }}</td>
+                    <td>{{ a.points_awarded }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">لا توجد محاولات بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}

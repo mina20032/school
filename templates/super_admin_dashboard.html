@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}المشرف الأعلى - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('super_admin_dashboard') }}">المشرف الأعلى</a>
+<a href="{{ url_for('super_admin_admins') }}">المستخدمون</a>
+<a href="{{ url_for('super_admin_attempts') }}">المحاولات</a>
+<a href="{{ url_for('admin_logout') }}">تسجيل الخروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>لوحة المشرف الأعلى</h2>
+    <p class="text-muted">التحكم الكامل في النظام. تسجيل الدخول: {{ user.username }}</p>
+    <div class="admin-menu">
+        <a href="{{ url_for('super_admin_admins') }}">إدارة المستخدمين</a>
+        <a href="{{ url_for('super_admin_attempts') }}">جميع محاولات الاختبارات</a>
+    </div>
+</div>
+<div class="card">
+    <h3>جميع الطلاب</h3>
+    {% if students %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الصف</th>
+                    <th>مجموع النقاط</th>
+                    <th>تاريخ الانضمام</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.name }}</td>
+                    <td>{% for g in grades %}{% if g[0] == s.grade %}{{ g[1] }}{% endif %}{% endfor %}</td>
+                    <td>{{ s.total_points }}</td>
+                    <td>{{ s.created_at.strftime('%Y-%m-%d') if s.created_at else '—' }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('super_admin_student_delete', student_id=s.id) }}" style="display:inline;" onsubmit="return confirm('حذف الطالب «{{ s.name }}»؟ سيتم حذف كل نتائجه أيضاً.');">
+                            <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">لا يوجد طلاب.</p>
+    {% endif %}
+</div>
+<div class="card">
+    <h3>المستخدمون (مشرفون)</h3>
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>اسم المستخدم</th>
+                <th>الدور</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.role }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    <a href="{{ url_for('super_admin_admins') }}" class="btn btn-primary mt-2">إدارة المستخدمين</a>
+</div>
+<div class="card">
+    <h3>سجل النشاط</h3>
+    {% if logs %}
+    <div class="table-wrap logs-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>الوقت</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') if log.timestamp else '—' }}</td>
+                    <td>{{ log.action }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">لا يوجد سجل بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}

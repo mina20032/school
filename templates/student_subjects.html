@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}المواد - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('index') }}">الرئيسية</a>
+<a href="{{ url_for('student_dashboard') }}">لوحتي</a>
+<a href="{{ url_for('marathon') }}">الترتيب</a>
+<a href="{{ url_for('student_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>اختر مادة</h2>
+    <p class="text-muted">كل مادة تظهر في يومها فقط. اضغط على المادة لبدء الاختبار (مرة واحدة لكل اختبار).</p>
+    {% if subjects %}
+    <div class="subject-cards">
+        {% for s in subjects %}
+        {% if s.id in taken_subject_ids %}
+        <div class="subject-card subject-card-done">
+            <span class="subject-card-name">{{ s.name }}</span>
+            <span class="subject-card-badge">تم حله ✓</span>
+        </div>
+        {% else %}
+        <a href="{{ url_for('quiz_page', subject_id=s.id) }}" class="subject-card subject-card-link">
+            <span class="subject-card-name">{{ s.name }}</span>
+            <span class="subject-card-go">ابدأ الاختبار ←</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    {% if subject_name_today is none %}
+    <p class="text-muted">لا توجد مادة متاحة اليوم (الجمعة أو السبت). كل مادة لها يوم محدد خلال الأسبوع.</p>
+    {% else %}
+    <p class="text-muted">لا توجد مواد لصفك حالياً.</p>
+    {% endif %}
+    {% endif %}
+    <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary mt-2">الرجوع الي الماراثون</a>
+</div>
+{% endblock %}

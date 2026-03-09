@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}دخول الطالب - منصة الاختبارات{% endblock %}
+{% block content %}
+<div class="card form-card form-card-easy">
+    <h2>ابدأ الاختبار</h2>
+    <p class="text-muted mb-2">اكتب اسمك واختر صفك فقط</p>
+    <form method="post" action="{{ url_for('student_login') }}">
+        <div class="form-group form-group-easy">
+            <label for="name">اسمك</label>
+            <input type="text" id="name" name="name" required placeholder="مثال: أحمد" autofocus class="input-easy">
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="grade">صفك</label>
+            <select id="grade" name="grade" required class="input-easy">
+                <option value="">اختر الصف</option>
+                {% for value, label in grades %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-easy">ابدأ</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-block">رجوع</a>
+    </form>
+</div>
+{% endblock %}

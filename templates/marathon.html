@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}ماراثون الطلاب - منصة الاختبارات{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>ماراثون الطلاب</h2>
+    <p class="text-muted">ترتيب الطلاب حسب مجموع النقاط. يتم التحديث تلقائياً.</p>
+    {% if students %}
+    <div class="table-wrap">
+        <table class="marathon-table">
+            <thead>
+                <tr>
+                    <th>الترتيب</th>
+                    <th>اسم الطالب</th>
+                    <th>الصف</th>
+                    <th>مجموع النقاط</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td class="rank-cell {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+                        {% if loop.index == 1 %}🥇 الأول{% elif loop.index == 2 %}🥈 الثاني{% elif loop.index == 3 %}🥉 الثالث{% else %}{{ loop.index }}{% endif %}
+                    </td>
+                    <td>{{ s.name }}</td>
+                    <td>{{ grades_dict.get(s.grade, s.grade) }}</td>
+                    <td>{{ s.total_points }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">لا يوجد طلاب في لوحة المتصدرين بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}

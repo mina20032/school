@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}جميع المحاولات - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('super_admin_dashboard') }}">المشرف الأعلى</a>
+<a href="{{ url_for('super_admin_admins') }}">المستخدمون</a>
+<a href="{{ url_for('super_admin_attempts') }}">المحاولات</a>
+<a href="{{ url_for('admin_logout') }}">تسجيل الخروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>جميع محاولات الاختبارات</h2>
+    {% if answers %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الطالب</th>
+                    <th>المادة</th>
+                    <th>صحيح</th>
+                    <th>النقاط</th>
+                    <th>عنوان IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in answers %}
+                <tr>
+                    <td>{{ a.submitted_at.strftime('%Y-%m-%d %H:%M') if a.submitted_at else '—' }}</td>
+                    <td>{{ a.student.name if a.student else '—' }}</td>
+                    <td>{{ a.question.subject.name if a.question and a.question.subject else '—' }}</td>
+                    <td>{{ 'نعم' if a.is_correct else 'لا' }}</td>
+                    <td>{{ a.points_awarded }}</td>
+                    <td>{{ a.ip_address or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">لا توجد محاولات بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}

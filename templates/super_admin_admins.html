@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}إدارة المستخدمين - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('super_admin_dashboard') }}">المشرف الأعلى</a>
+<a href="{{ url_for('super_admin_admins') }}">المستخدمون</a>
+<a href="{{ url_for('super_admin_attempts') }}">المحاولات</a>
+<a href="{{ url_for('admin_logout') }}">تسجيل الخروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>إدارة المستخدمين</h2>
+    <h3>إنشاء مستخدم جديد</h3>
+    <form method="post" class="mb-2 form-inline">
+        <input type="hidden" name="action" value="create">
+        <div class="form-group">
+            <label for="username">اسم المستخدم</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">كلمة المرور</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="role">الدور</label>
+            <select id="role" name="role">
+                <option value="admin">مشرف (معلم)</option>
+                <option value="super_admin">مشرف أعلى</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">إنشاء</button>
+    </form>
+</div>
+<div class="card">
+    <h3>تغيير كلمة المرور</h3>
+    <form method="post" class="mb-2 form-inline">
+        <input type="hidden" name="action" value="password">
+        <div class="form-group">
+            <label for="user_id_pw">المستخدم</label>
+            <select id="user_id_pw" name="user_id" required>
+                {% for u in users %}
+                <option value="{{ u.id }}">{{ u.username }} ({{ u.role }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="new_password">كلمة المرور الجديدة</label>
+            <input type="password" id="new_password" name="new_password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">تحديث</button>
+    </form>
+</div>
+<div class="card">
+    <h3>جميع المستخدمين</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>اسم المستخدم</th>
+                <th>الدور</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.role }}</td>
+                <td>
+                    {% if u.id != user.id %}
+                    <form method="post" style="display:inline;" onsubmit="return confirm('حذف هذا المستخدم؟');">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                        <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted">(أنت)</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

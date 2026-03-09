@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ 'تعديل' if question else 'إضافة' }} سؤال - منصة الاختبارات{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('admin_subjects') }}">المواد</a>
+<a href="{{ url_for('admin_results') }}">النتائج</a>
+<a href="{{ url_for('admin_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>{{ 'تعديل' if question else 'إضافة' }} سؤال</h2>
+    <form method="post" action="{{ url_for('admin_question_edit', question_id=question.id) if question else url_for('admin_question_add') }}" id="question-form">
+        <div class="form-group form-group-easy">
+            <label for="grade_select">الصف</label>
+            <select id="grade_select" class="input-easy">
+                <option value="">اختر الصف أولاً</option>
+                {% for value, label in grades %}
+                <option value="{{ value }}" {% if preselected_grade == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="subject_id">المادة</label>
+            <select id="subject_id" name="subject_id" required class="input-easy">
+                <option value="">اختر المادة</option>
+                {% for s in subjects %}
+                <option value="{{ s.id }}" data-grade="{{ s.grade }}" {% if question and question.subject_id == s.id %}selected{% elif preselected_subject_id == s.id %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="question_text">نص السؤال</label>
+            <textarea id="question_text" name="question_text" required class="input-easy">{% if question %}{{ question.question_text }}{% endif %}</textarea>
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="option_a">الخيار أ</label>
+            <input type="text" id="option_a" name="option_a" required value="{{ question.option_a if question else '' }}" class="input-easy">
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="option_b">الخيار ب</label>
+            <input type="text" id="option_b" name="option_b" required value="{{ question.option_b if question else '' }}" class="input-easy">
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="option_c">الخيار ج</label>
+            <input type="text" id="option_c" name="option_c" required value="{{ question.option_c if question else '' }}" class="input-easy">
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="option_d">الخيار د</label>
+            <input type="text" id="option_d" name="option_d" required value="{{ question.option_d if question else '' }}" class="input-easy">
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="correct_answer">الإجابة الصحيحة</label>
+            <select id="correct_answer" name="correct_answer" class="input-easy">
+                <option value="A" {% if question and question.correct_answer == 'A' %}selected{% endif %}>أ</option>
+                <option value="B" {% if question and question.correct_answer == 'B' %}selected{% endif %}>ب</option>
+                <option value="C" {% if question and question.correct_answer == 'C' %}selected{% endif %}>ج</option>
+                <option value="D" {% if question and question.correct_answer == 'D' %}selected{% endif %}>د</option>
+            </select>
+        </div>
+        <div class="form-group form-group-easy">
+            <label for="points">النقاط</label>
+            <input type="number" id="points" name="points" min="1" value="{{ question.points if question else 1 }}" class="input-easy">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-easy">حفظ</button>
+            {% if not question %}
+            <button type="submit" name="add_another" value="1" class="btn btn-secondary btn-easy">حفظ وإضافة سؤال آخر</button>
+            {% endif %}
+            <a href="{{ url_for('admin_questions', subject_id=question.subject_id) if question else url_for('admin_subjects') }}" class="btn btn-secondary btn-easy">إلغاء</a>
+        </div>
+    </form>
+</div>
+<script>
+(function() {
+    var gradeSelect = document.getElementById('grade_select');
+    var subjectSelect = document.getElementById('subject_id');
+    if (!gradeSelect || !subjectSelect) return;
+    var options = subjectSelect.querySelectorAll('option[data-grade]');
+    function filterSubjects() {
+        var grade = gradeSelect.value;
+        var hasVisible = false;
+        options.forEach(function(opt) {
+            var show = !grade || opt.getAttribute('data-grade') === grade;
+            opt.style.display = show ? '' : 'none';
+            opt.disabled = !show;
+            if (show) hasVisible = true;
+        });
+        if (grade && subjectSelect.value) {
+            var selected = subjectSelect.querySelector('option[value="' + subjectSelect.value + '"]');
+            if (selected && selected.disabled) subjectSelect.value = '';
+        }
+    }
+    gradeSelect.addEventListener('change', filterSubjects);
+    filterSubjects();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}الرئيسية -الماراثون التعليمي {% endblock %}
+{% block nav_left %}<span class="nav-org">إدارة غرب طنطا</span>{% endblock %}
+{% block nav_right %}<span class="nav-org">مدرسة خالد بن الوليد</span>{% endblock %}
+{% block content %}
+<div class="home-circles-wrap">
+    <div class="home-circles">
+        <div class="home-circles-col home-circles-right">
+            {% for i in image_order[:3] %}
+            <div class="home-circle">
+                <img src="{{ url_for('static', filename='images/circle' ~ i ~ '.png') }}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <span class="home-circle-placeholder" style="display:none;">{{ i }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="home-circles-col home-circles-left">
+            {% for i in image_order[3:6] %}
+            <div class="home-circle">
+                <img src="{{ url_for('static', filename='images/circle' ~ i ~ '.png') }}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <span class="home-circle-placeholder" style="display:none;">{{ i }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="hero card hero-bottom">
+    <h1>مرحباً بكم</h1>
+    <p class="hero-sub">الماراثون التعليمي لمدرسة خالد بن الوليد الاعداديه بنين </p>
+    <div class="hero-actions">
+        <a href="{{ url_for('student_login') }}" class="btn btn-primary btn-hero">ابدأ كطالب</a>
+        <a href="{{ url_for('marathon') }}" class="btn btn-secondary btn-hero">ترتيب الطلاب (ماراثون)</a>
+    </div>
+</div>
+{% endblock %}

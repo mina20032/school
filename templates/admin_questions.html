@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}أسئلة: {{ subject.name }}{% endblock %}
+{% block nav_links %}
+<a href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+<a href="{{ url_for('admin_subjects') }}">المواد</a>
+<a href="{{ url_for('admin_results') }}">النتائج</a>
+<a href="{{ url_for('admin_logout') }}">خروج</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>أسئلة: {{ subject.name }}</h2>
+    <div class="quick-actions mb-2">
+        <a href="{{ url_for('admin_question_add') }}?subject_id={{ subject.id }}" class="btn btn-primary btn-easy">إضافة سؤال لهذه المادة</a>
+        <a href="{{ url_for('admin_subjects') }}" class="btn btn-secondary btn-easy">رجوع للمواد</a>
+    </div>
+    {% if questions %}
+    <table class="table-easy">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>السؤال</th>
+                <th>الصحيح</th>
+                <th>النقاط</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in questions %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ q.question_text[:60] }}{% if q.question_text|length > 60 %}...{% endif %}</td>
+                <td>{{ q.correct_answer }}</td>
+                <td>{{ q.points }}</td>
+                <td class="flex">
+                    <a href="{{ url_for('admin_question_edit', question_id=q.id) }}" class="btn btn-sm btn-secondary">تعديل</a>
+                    <form method="post" action="{{ url_for('admin_question_delete', question_id=q.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" data-confirm="حذف هذا السؤال؟">حذف</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">لا توجد أسئلة. <a href="{{ url_for('admin_question_add') }}?subject_id={{ subject.id }}">أضف أول سؤال</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}
