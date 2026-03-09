@@ -574,6 +574,12 @@ def init_db():
             print("Default super admin created: username=super, password=super123")
 
 
+"""
+Ensure tables exist (and seed defaults) whenever the app is imported,
+including on Vercel/Neon deployments. Safe to call multiple times.
+"""
+init_db()
+
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5000)
