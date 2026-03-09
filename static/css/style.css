@@ -576,16 +576,18 @@ tr:hover td { background: var(--surface2); }
 
 /* Responsive: tablet & mobile */
 @media (max-width: 768px) {
-    /* Header: titles تتراص بشكل عمودي ومُركز */
+    /* Header: titles في صف واحد (يمين - وسط - يسار) */
     .navbar {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: nowrap;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         padding: 0.75rem 1rem;
         text-align: center;
     }
     .navbar-section {
         min-width: auto;
+        flex: 0 0 auto;
         justify-content: center;
     }
     .navbar-section-right,
@@ -594,8 +596,14 @@ tr:hover td { background: var(--surface2); }
     }
     .navbar-title {
         order: 0;
-        flex: 0 0 auto;
+        flex: 1 1 auto;
         text-align: center;
+    }
+    .nav-org {
+        font-size: 0.9rem;
+    }
+    .nav-brand {
+        font-size: 1.1rem;
     }
 
     /* Hero card: في المنتصف وبعرض مناسب للموبايل */
