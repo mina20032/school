@@ -574,10 +574,54 @@ tr:hover td { background: var(--surface2); }
     color: #fff;
 }
 
-/* Responsive */
+/* Responsive: tablet & mobile */
+@media (max-width: 768px) {
+    /* Header: titles تتراص بشكل عمودي ومُركز */
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        text-align: center;
+    }
+    .navbar-section {
+        min-width: auto;
+        justify-content: center;
+    }
+    .navbar-section-right,
+    .navbar-section-left {
+        justify-content: center;
+    }
+    .navbar-title {
+        order: 0;
+        flex: 0 0 auto;
+        text-align: center;
+    }
+
+    /* Hero card: في المنتصف وبعرض مناسب للموبايل */
+    .hero.card {
+        max-width: 480px;
+        margin: 1rem auto;
+    }
+
+    /* Rotating images: دائماً في منتصف الصفحة عرضياً */
+    .home-circles-wrap {
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .home-circles {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+}
+
 @media (max-width: 600px) {
-    .navbar { padding: 0.75rem 1rem; }
-    .container { padding: 1rem; }
     .hero h1 { font-size: 1.5rem; }
     .hero-actions { flex-direction: column; align-items: center; }
     .btn-hero { width: 100%; max-width: 280px; }
